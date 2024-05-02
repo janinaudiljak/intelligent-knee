@@ -12,13 +12,37 @@ class HX711:
     """
     HX711 represents chip for reading load cells.
     """
+    def outliers_filter(self, data):
+        """
+        outliers_filter function filters the outliers from input data.
+        
+        Args:
+            data(list): list of integers
+        
+        Returns:
+            list: Filtered list of integers
+        """
+        data_len = len(data)
+        data_mean = stat.mean(data)
+        data_stddev = stat.stdev(data)
+        filtered_data = []
+
+        for i in range(0, data_len):
+            if (data[i] >= (data_mean - (3 * data_stddev)) and
+                    data[i] <= (data_mean + (3 * data_stddev))):
+                filtered_data.append(data[i])
+            else:
+                if self._debug_mode:
+                    print('Outlier detected. Removed {}'.format(data[i]))
+
+        return filtered_data
 
     def __init__(self,
                  dout_pin,
                  pd_sck_pin,
                  gain_channel_A=128,
                  select_channel='A'):
-        
+        print("Initializing HX711")
     
     
 
@@ -89,6 +113,7 @@ class HX711:
                              'Received: {}'.format(channel))
         # after changing channel or gain it has to wait 50 ms to allow adjustment.
         # the data before is garbage and cannot be used.
+        print("Selecting channel:", channel)
         self._read()
         time.sleep(0.5)
 
@@ -113,6 +138,39 @@ class HX711:
         # the data before is garbage and cannot be used.
         self._read()
         time.sleep(0.5)
+
+    def get_raw_data_mean(self, num_readings):
+        """
+        Calculate the mean of multiple readings from the HX711.
+
+        Args:
+            num_readings (int): The number of readings to average.
+
+        Returns:
+            float: The average of the readings.
+        """
+        if num_readings <= 0:
+            raise ValueError("Number of readings must be greater than zero.")
+        total = 0
+        for _ in range(num_readings):
+            total += self._read()
+        return total / num_readings
+
+    def get_weight_mean(self, times=10):
+        """
+        Calculates the mean weight from multiple readings.
+
+        Args:
+            times (int): The number of readings to average.
+
+        Returns:
+            float: The average weight.
+        """
+        total_weight = 0
+        for _ in range(times):
+            total_weight += self.get_units()
+        return total_weight / times
+
 
     def zero(self, readings=30):
         """
@@ -431,8 +489,8 @@ hx = HX711(dout_pin=4, pd_sck_pin=18)
 
 hx.zero()
 
-input('Place known weight on scle & press Enter') # get a reading
-reading = hx.get_data_mean(reading=100) #more for calibration purposes
+input('Place known weight on scale & press Enter') # get a reading
+reading = hx.get_raw_data_mean(num_readings=100) #more for calibration purposes
 
 known_weight_grams = input('Enter the known weight in grams & press Enter:') # asks the user to type in the known weight
 value = float(known_weight_grams) # gives the value as a decimal
