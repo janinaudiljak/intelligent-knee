@@ -428,3 +428,19 @@ class HX711:
 
 hx = HX711(dout_pin=4, pd_sck_pin=18)
 
+
+hx.zero()
+
+input('Place known weight on scle & press Enter') # get a reading
+reading = hx.get_data_ mean(reading=100) #more for calibration purposes
+
+known_weight_grams = input('Enter the known weight in grams & press Enter:') # asks the user to type in the known weight
+value = float(known_weight grams) # gives the value as a decimal
+ratio = reading/value
+hx.set_scale_ratio(ratio)
+
+while True: 
+    weight = hx.get_weight_mean()
+    print(weight)
+    
+
