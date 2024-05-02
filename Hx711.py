@@ -18,6 +18,10 @@ class HX711:
                  pd_sck_pin,
                  gain_channel_A=128,
                  select_channel='A'):
+        
+    
+    
+
         """
         Init a new instance of HX711
 
@@ -421,3 +425,6 @@ class HX711:
             float: Scale ratio multiplied by average value.
         """
         return self._get_value(times)
+
+hx = HX711(dout_pin=4, pd_sck_pin=18)
+
