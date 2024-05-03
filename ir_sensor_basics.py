@@ -1,7 +1,7 @@
 import gpiod
 import time
 
-chipname = "gpiochip0" 
+chipname = "gpiochip4" 
 IR_PIN_OFFSET = 17
 
 chip = gpiod.Chip(chipname)

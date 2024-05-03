@@ -84,7 +84,7 @@ class HX711:
         self._debug_mode = False
         self._data_filter = self.outliers_filter  # default it is used outliers_filter
 
-        self._chip = gpiod.Chip('gpiochip0')
+        self._chip = gpiod.Chip('gpiochip4')
         self._pd_sck_line = self._chip.get_line(self._pd_sck)
         self._dout_line = self._chip.get_line(self._dout)
         self._pd_sck_line.request(consumer='hx711', type=gpiod.LINE_REQ_DIR_OUT)
