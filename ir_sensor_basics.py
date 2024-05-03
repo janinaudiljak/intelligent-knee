@@ -13,7 +13,7 @@ line.request(consumer="ir_sensor", type=gpiod.LINE_REQ_DIR_IN)
 last_value = None
 
 def on_color_change(event_type, offset):
-    if event_type == gpiod.LINE_REQ_EV_RISING_EDGE:
+    if event_type == gpiod.LINE_REQ_EV_FALLING_EDGE:
         print("White color detected! Halting...")
         raise KeyboardInterrupt
     else:  
