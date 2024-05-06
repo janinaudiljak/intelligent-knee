@@ -19,18 +19,22 @@ GAIN3 = 1
 #GAIN_SIXTEEN (for an input range of +/-0.256V)
 
 while True:
-    #values0 = adc.read_adc(0, gain=GAIN0) #1652-950
-    #print("pin0: ", values0)
-    #time.sleep(0.1)
+    values0 = adc.read_adc(0, gain=GAIN0) #1652-950
+    # print("pin0: ", values0)
+    # time.sleep(0.1)
 
-    #values1 = adc.read_adc(1, gain=GAIN1) #1518-(-1) konstig(!!)
-    #print("pin1: ", values1)
-    #time.sleep(0.1)
+    values1 = adc.read_adc(1, gain=GAIN1) #1518-(-1) konstig(!!)
+    # print("pin1: ", values1)
+    # time.sleep(0.1)
 
-    #values2 = adc.read_adc(2, gain=GAIN2) #1652-650
-    #print("pin2: ", values2)
-    #time.sleep(0.1)
+    values2 = adc.read_adc(2, gain=GAIN2) #1652-650
+    # print("pin2: ", values2)
+    # time.sleep(0.1)
 
     values3 = adc.read_adc(3, gain=GAIN3) #254-222
-    print("pin3: ", values3)
+    # print("pin3: ", values3)
+    # time.sleep(0.1)
+
+
+    print(f"{values0}, {values1}, {values2}, {values3}")
     time.sleep(0.1)
