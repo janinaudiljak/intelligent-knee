@@ -5,10 +5,10 @@ import Adafruit_ADS1x15
 
 adc = Adafruit_ADS1x15.ADS1015(address=0x48, busnum=1)
 # Choose a gain of 1 for reading voltages from 0 to 4.09V.
-GAIN0 = 2
-GAIN1 = 2
-GAIN2 = 2
-GAIN3 = 2
+GAIN0 = 1
+GAIN1 = 1
+GAIN2 = 1
+GAIN3 = 1
 
 #To boost small signals, the gain can be adjusted on the ADS1x15 chips in the following steps:
 #GAIN_TWOTHIRDS (for an input range of +/- 6.144V)

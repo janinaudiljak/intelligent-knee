@@ -3,7 +3,8 @@ import os
 import can
 import myactuator_rmd_py as rmd
 
-
+MIN_ENCODER_POSITION = -83037160
+MAX_ENCODER_POSITION = -82226231
 
 if __name__ == "__main__":
     #Set CAN0 speed to 1M bps
@@ -18,7 +19,24 @@ if __name__ == "__main__":
 
 
 
-    
+    m.setEncoderZero(-83037160)
+   # print("Zero offset set to -83037160")
+
+    current_position = m.getMultiTurnEncoderPosition()
+   # print(f"Current Position after zeroing: {current_position}")
+
+    def within_limits(position):
+        return MIN_ENCODER_POSITION <= position <= MAX_ENCODER_POSITION
+
+    def move_to_position(position):
+        if within_limits(position):
+            m.sendPositionAbsoluteSetpoint(position, 500.0)
+            print(f"Moving to position: {position}")
+        else:
+            print(f"Position {position} is out of bounds. Movement aborted.")
+
+
+
 
     # actuator.sendPositionAbsoluteSetpoint(0, 500.0)
     # actuator.shutdownMotor()
