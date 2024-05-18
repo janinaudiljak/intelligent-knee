@@ -1,6 +1,7 @@
 
 import os
 import can
+import code
 import myactuator_rmd_py as rmd
 
 MIN_ENCODER_POSITION = -83037160
@@ -35,7 +36,7 @@ if __name__ == "__main__":
         else:
             print(f"Position {position} is out of bounds. Movement aborted.")
 
-
+    code.interact(local=dict(globals(), **locals()))
 
 
     # actuator.sendPositionAbsoluteSetpoint(0, 500.0)
