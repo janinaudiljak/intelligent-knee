@@ -20,7 +20,12 @@ class DataLogger:
         timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         data['timestamp'] = timestamp
 
-        self.df = pd.concat([self.df, pd.DataFrame([data])], ignore_index=True)
-
-        self.df.round(3).to_csv(self.file_name, mode='a', header=False, index=False)
+        self.df = pd.concat(
+            [
+                self.df, 
+                pd.DataFrame([data])
+            ], 
+            ignore_index=True)
+        
+        self.df.iloc[[-1]].round(3).to_csv(self.file_name, mode='a', header=False, index=False)
         

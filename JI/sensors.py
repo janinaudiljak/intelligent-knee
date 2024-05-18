@@ -5,8 +5,14 @@ import time
 import Adafruit_ADS1x15
 import gpiod
 
+import can
+import myactuator_rmd_py as rmd
+import os
+
+from gpiod.line import Direction, Value
+
 class PressureSensor:
-    def __init__(self, gain=1, fake=True, num_channels=4):
+    def __init__(self, gain=1, fake=False, num_channels=4):
         self.gain = gain
         self.fake = fake
         self.channels = num_channels
@@ -39,37 +45,72 @@ class PressureSensor:
 
 class SafetySensor:
 
-    def __init__(self, pin=17, fake=True):
+    def __init__(self, pin=17, fake=False):
         self.pin = pin
         self.fake = fake
 
-        if self.fake:
-            self.chip = gpiod.Chip("gpiochip4" )
-            self.line = self.chip.get_line(self.pin)
-            self.line.request(consumer="ir_sensor", type=gpiod.LINE_REQ_DIR_IN)
+        if not self.fake:
+            self.line = line = gpiod.request_lines(
+                "/dev/gpiochip4",
+                consumer="get-line-value",
+                config={self.pin: gpiod.LineSettings(direction=Direction.INPUT)},
+        )
 
     def read(self):
         if self.fake:
-            random.choice([0, 1])
+            return random.choice([0, 1])
 
-        return self.line.get_value()
+        return 0 if self.line.get_value(self.pin) == Value.ACTIVE else 1
     
     def __del__(self):
         if self.fake:
-            return
-        
+            return 
         self.line.release()
-        self.chip.close()
 
     def __str__(self):
         return f"IR sensor: {self.read()}"
 
 class Motor:
     def __init__(self):
+        #Set CAN0 speed to 1M bps
+        os.system('sudo ifconfig can0 down')
+        os.system('sudo ip link set can0 type can bitrate 1000000')
+        os.system("sudo ifconfig can0 txqueuelen 100000")
+        os.system('sudo ifconfig can0 up')
+
+        self.driver = rmd.CanDriver("can0")
+        self.motor = rmd.ActuatorInterface(self.driver, 1)
+
+        self.velocity_max = 100
+
         self.temp = 0
         self.position = 0
         self.velocity = 0
         self.acceleration = 0
+
+    def get_mode(self):
+        return self.motor.getControlMode()
+    
+    def get_status(self):
+        s1 = self.motor.getMotorStatus1()
+        s2 = self.motor.getMotorStatus2()
+        s3 = self.motor.getMotorStatus3()
+        return (s1, s2, s3)
+
+    def get_angle(self):
+        return self.motor.getMultiTurnAngle()
+    
+    def set_torque(self, torque):
+        self.motor.sendTorqueSetpoint(torque, torque)
+
+    def set_velocity(self, velocity):
+        if velocity > self.velocity_max:
+            velocity = self.velocity
+
+        self.motor.sendVelocitySetpoint(self, velocity)
+
+    def set_position_abs(self, pos, vel):
+        self.motor.sendPositionAbsoluteSetpoint(pos, vel)
 
     def read_temp(self):
         # Simulate reading motor temperature
@@ -88,4 +129,6 @@ class Motor:
         return random.uniform(0, 10)
 
     def stop(self):
+        self.motor.stopMotor()
+        self.motor.shutdown()
         print("Motor stopped.")
