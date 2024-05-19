@@ -130,5 +130,5 @@ class Motor:
 
     def stop(self):
         self.motor.stopMotor()
-        self.motor.shutdown()
+        self.motor.shutdownMotor()
         print("Motor stopped.")

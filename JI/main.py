@@ -8,8 +8,8 @@ from pprint import pprint
 import os
 
 def initialize_sensors():
-    pressure_sensors = PressureSensor(fake=False)
-    safety_sensor = SafetySensor(fake=False)
+    pressure_sensors = PressureSensor()
+    safety_sensor = SafetySensor()
     motor = Motor()
     return pressure_sensors, safety_sensor, motor
 
@@ -19,6 +19,11 @@ def main():
 
     try:
         while True:
+            safety = safety_sensor.read() 
+            if safety:
+                motor.stop()
+                break
+
             data = {
                 'p0': pressure_sensors.read(0),
                 'p1': pressure_sensors.read(1),
