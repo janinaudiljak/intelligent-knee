@@ -2,7 +2,8 @@
 
 import time
 import traceback
-from sensors import PressureSensor, SafetySensor, Motor
+from sensors import PressureSensor, SafetySensor
+from motor import Motor
 from logger import DataLogger
 from pprint import pprint
 import os
