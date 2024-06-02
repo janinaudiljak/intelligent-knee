@@ -8,7 +8,10 @@ import time
 import random
 
 class Motor:
-    def __init__(self):
+    def __init__(self, fake=False):
+        self.fake = fake
+        if fake:
+            return 
         # Set CAN0 speed to 1M bps
         os.system('sudo ifconfig can0 down')
         os.system('sudo ip link set can0 type can bitrate 1000000')
@@ -24,6 +27,12 @@ class Motor:
         self.position = 0
         self.velocity = 0
         self.acceleration = 0
+
+
+        m = self.motor
+        m.setCurrentPositionAsEncoderZero()
+        m.reset()
+        time.sleep(1)
 
     def get_mode(self):
         return self.motor.getControlMode()
@@ -66,6 +75,8 @@ class Motor:
         return random.uniform(0, 10)
 
     def stop(self):
+        if self.fake:
+            return
         self.motor.stopMotor()
         # self.motor.shutdownMotor()
         print("Motor stopped.")

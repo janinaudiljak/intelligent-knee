@@ -1,41 +1,69 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
+plt.close('all')
 
-# Load the CSV file
-file_path = "logs/data_20240518_153552.csv"
-data = pd.read_csv(file_path)
+# Read the CSV file into a pandas DataFrame
+df = pd.read_csv('logs/data_latest.csv')
 
-# Parse the timestamp column as datetime
-data['timestamp'] = pd.to_datetime(data['timestamp'])
+# Convert the 'timestamp' column to datetime
+df['timestamp'] = pd.to_datetime(df['timestamp'])
+df['t'] = (df['timestamp'] - df['timestamp'][0]).dt.total_seconds()
 
-# Set timestamp as the index
-data.set_index('timestamp', inplace=True)
 
-# Plot the data
-fig, axes = plt.subplots(nrows=6, ncols=1)
-fig.suptitle('Data Variables Over Time', fontsize=16)
+fig, ax = plt.subplots(4, 1, figsize=(10, 10), sharex=True)
 
-# Plot pressure sensors in the first subplot
-axes[0].plot(data.index, data['p0'], label='p0')
-axes[0].plot(data.index, data['p1'], label='p1')
-axes[0].plot(data.index, data['p2'], label='p2')
-axes[0].plot(data.index, data['p3'], label='p3')
-axes[0].set_title('Pressure Sensors')
-axes[0].set_xlabel('Time')
-axes[0].set_ylabel('Pressure')
-axes[0].legend()
-axes[0].grid(True)
+# Plot the variables p0, p1, p2, and p3 on the first subplot
+# ax[0].step(df['t'], df['adc0'], label='p0')
+# ax[0].step(df['t'], df['adc1'], label='p1')
+# ax[0].step(df['t'], df['adc2'], label='p2')
+# ax[0].step(df['t'], df['adc3'], label='p3')
+ax[0].step(df['t'], df['pos'], label='position')
+ax[0].set_ylabel('position')
+ax[0].grid(True)
+ax[0].legend()
 
-# Plot the remaining variables in separate subplots
-variables = ['safety', 'temp', 'pos', 'vel', 'torque']
+# ax[1].step(df['t'], df['v0']  , label='v0')
+# ax[1].step(df['t'], df['v1']  , label='v1')
+# ax[1].step(df['t'], df['v2']  , label='v2')
+# ax[1].step(df['t'], df['v3']  , label='v3')
+ax[1].step(df['t'], df['torque']  , label='reference torque')
+ax[1].set_ylabel('Torque [Nm]')
+ax[1].grid(True)
+ax[1].legend()
 
-for i, var in enumerate(variables, start=1):
-    ax = axes[i]
-    ax.plot(data.index, data[var])
-    ax.set_title(var.capitalize())
-    ax.set_xlabel('Time')
-    ax.set_ylabel(var.capitalize())
-    ax.grid(True)
+# ax[2].step(df['t'], df['r0']  , label='r0')
+# ax[2].step(df['t'], df['r1']  , label='r1')
+ax[2].step(df['t'], df['r2']  , label='r2')
+ax[2].step(df['t'], df['r3']  , label='r3')
+ax[2].set_ylabel('Reistance [Ohm]')
+ax[2].grid(True)
+ax[2].legend()
 
-# plt.tight_layout()
-plt.show()
+# ax[3].step(df['t'], df['input0'] , label='f0')
+# ax[3].step(df['t'], df['input1'] , label='f1')
+ax[3].step(df['t'], df['input2'] , label='f2')
+ax[3].step(df['t'], df['input3'] , label='f3')
+ax[3].set_ylabel('')
+
+ax[3].grid(True)
+ax[3].legend()
+
+# ax[1].step(df['t'], df['f0'], label='f0')
+# ax[1].step(df['t'], df['f1'] , label='f1')
+# ax[1].step(df['t'], df['f2'] , label='f2')
+# ax[1].step(df['t'], df['f3'], label='f3')
+# ax[1].set_ylabel('Mass [kg]')
+# ax[1].grid(True)
+# ax[1].legend()
+
+
+# Show the plot
+try:
+    plt.tight_layout()
+    plt.show()
+except KeyboardInterrupt as e:
+    plt.close('all')
+
+
+# Max value is 4096
