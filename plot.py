@@ -6,7 +6,7 @@ import numpy as np
 plt.close('all')
 
 # Select file to use
-file_name = "data_latest"
+file_name = "safety_fast"
 df = pd.read_csv(f"logs/{file_name}.csv")
 
 # Convert the 'timestamp' column to datetime
@@ -49,9 +49,12 @@ ax[4].legend()
 try:
     plt.tight_layout()
     plt.show()
-    plt.savefig(f"images/{file_name}.png")
+    
     import time
+    
     time.sleep(0.1)
+    fig.savefig(f"images/{file_name}.png")
+    
     plt.close()
 except KeyboardInterrupt as e:
     plt.close('all')
