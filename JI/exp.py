@@ -1,3 +1,5 @@
+# Script for experimenting with how to convert exponential decay (sensor input) to linear
+
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
