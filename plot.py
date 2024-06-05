@@ -25,10 +25,10 @@ def plot_experiment(file_path, ignore_plotting=False):
     ax[1].grid(True)
     ax[1].legend()
 
-    ax[2].step(df['t'], df['input0'], label='f0')
+    ax[2].step(df['t'], df['input0'], color="green", label='f0')
     # ax[2].step(df['t'], df['input1'], label='f1')
     # ax[2].step(df['t'], df['input2'], label='f2')
-    ax[2].step(df['t'], df['input3'], label='f3')
+    ax[2].step(df['t'], df['input3'], color="orange", label='f3')
     ax[2].set_ylabel('Input')
     ax[2].grid(True)
     ax[2].legend()
@@ -38,7 +38,7 @@ def plot_experiment(file_path, ignore_plotting=False):
     ax[3].grid(True)
     ax[3].legend()
 
-    ax[4].step(df['t'], df['safety'], color="r", label='Safety')
+    ax[4].step(df['t'], df['safety'], color="red", label='Safety')
     ax[4].grid(True)
     ax[4].legend()
     ax[4].set_xlabel('Time [s]')
