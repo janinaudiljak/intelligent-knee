@@ -8,7 +8,7 @@ import matplotlib.animation as animation
 plt.close('all')
 
 # Read the CSV file into a pandas DataFrame
-file_name = "passive2"
+file_name = "active3"
 df = pd.read_csv(f"logs/{file_name}.csv")
 
 # Convert the 'timestamp' column to datetime

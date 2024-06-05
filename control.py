@@ -3,6 +3,7 @@
 import time
 import traceback
 from sensors import PressureSensor, SafetySensor
+from myactuator_rmd_py import ActuatorException, ProtocolException, ValueRangeException
 from motor import Motor
 from logger import DataLogger
 from pprint import pprint
@@ -29,7 +30,7 @@ def main():
 
     flag_bounds = False
     prev_flag_bounds = False
-    motor_disabled = False
+    motor_disabled = True
 
     flag_safety = False
     prev_safety = safety_sensor.read()
@@ -44,7 +45,8 @@ def main():
             safety = safety_sensor.read()
             u2 = pressure_sensors.read_linear(0)
             u3 = pressure_sensors.read_linear(3)
-            s1, s2, s3 = motor.get_status()
+            # s1, s2, s3 = motor.get_status()
+            s2 = motor.get_status2()
 
             # if (safety == True and prev_safety == False):
             #     flag_safety = True
@@ -127,6 +129,8 @@ def main():
             os.system('cls' if os.name == 'nt' else 'clear')
             pprint(data)
             time.sleep(0.01)  
+    except ProtocolException as e:
+        pass
     except KeyboardInterrupt as e:
         print("Exiting")
 

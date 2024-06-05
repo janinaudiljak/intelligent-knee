@@ -44,6 +44,11 @@ class Motor:
         s2 = self.motor.getMotorStatus2()
         s3 = self.motor.getMotorStatus3()
         return (s1, s2, s3)
+    
+    def get_status2(self):
+        if self.fake:
+            return
+        return self.motor.getMotorStatus2()
 
     def get_angle(self):
         if self.fake:
